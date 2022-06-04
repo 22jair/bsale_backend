@@ -1,0 +1,22 @@
+{
+  "workbench.colorCustomizations": {
+    "activityBar.background": "#3B2B15",
+    "titleBar.activeBackground": "#523C1D",
+    "titleBar.activeForeground": "#FCFAF7"
+  },
+  "sqltools.connections": [
+    {
+      "mysqlOptions": {
+        "authProtocol": "default"
+      },
+      "previewLimit": 50,
+      "server": "mdb-test.c6vunyturrl6.us-west-1.rds.amazonaws.com",
+      "port": 3306,
+      "askForPassword": true,
+      "driver": "MySQL",
+      "name": "BSALE",
+      "database": "bsale_test",
+      "username": "bsale_test"
+    }
+  ]
+}
