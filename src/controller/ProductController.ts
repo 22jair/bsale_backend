@@ -40,13 +40,10 @@ export class ProductController {
         skip: offset,
         take: limit
       }
-
-      console.log("CATEGORY", category);
+      
       if(!isNaN(Number(category)) && category != undefined){
         options.where = { category: { id: Number(category) } };
       }
-
-      console.log("options", options);
 
       if(search.length > 0){
         options.where = { name: Like(`%${search}%`) };
@@ -85,6 +82,78 @@ export class ProductController {
     }    
   }
 
- 
+  getProductById = async (req: Request, res: Response) => {    
+    try{
+      
+      let { id } = req.params;   
+      
+      if(isNaN(Number(id))) throw new Error("Id inválido");      
+      
+      const product = await Product.findOne({ 
+        where : { id: Number(id) },
+        relations: ["category"]
+      });      
+      
+      if(!product) throw new Error("Producto no encontrado");
+      
+      return res.json({ ok: true, data: product });
+
+    }catch(err){
+
+      // LOG ERROR - CONSOLE (HEROKU, AWS...)
+      console.log("LOG-ERROR: ", err);      
+      if(err instanceof Error){
+        return res.status(400).json({
+          ok:false, 
+          message: err.message 
+        });
+      }
+
+      return res.status(500).json({
+        ok:false,
+        message: "Error al obtener producto"
+      });
+
+    }
+  }
+
+  getTopDiscountProducts = async (req: Request, res: Response) => {
+    try{
+      
+      const [data, total] = await Product.findAndCount({
+        order: { discount: "DESC" },
+        relations: ["category"],
+        take: 5
+      });
+
+      const mapData = data.map(item => {
+        return {
+          ...item,
+          priceWithDiscount: item.price - (item.price * (item.discount / 100))
+        }
+      });
+      
+      return res.json({ 
+        ok: true,
+        data: mapData
+       });
+
+    }catch(err){
+      
+      // LOG ERROR - CONSOLE (HEROKU, AWS...)
+      console.log("LOG-ERROR: ", err);   
+      if(err instanceof Error){
+        return res.status(400).json({
+          ok:false, 
+          message: err.message 
+        });
+      }
+      return res.status(500).json({
+        ok:false,
+        message: "Error al obtener productos"
+      });
+
+    }    
+  }
 
 }

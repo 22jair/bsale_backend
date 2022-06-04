@@ -20,6 +20,29 @@ export class CategoryController {
     }    
   }
 
+  getCategoryById = async (req: Request, res: Response) => {
+    try{
+      let { id } = req.params;   
+      
+      if(isNaN(Number(id))){
+        return res.status(400).json({
+          ok: false,
+          message: "Id inválido"          
+        });
+      }
+      
+      const category = await Category.findOne({ where : { id: Number(id) }, relations: ["products"] });
+      return res.json({
+        ok: true,
+        data: category
+      });
 
+    }catch(e){      
+      return res.status(500).json({
+        message: "Error al obtener categoria, contacte al administrador"
+      });
+    }
+
+  }
 
 }
