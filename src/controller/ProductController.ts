@@ -46,7 +46,7 @@ export class ProductController {
       }
 
       if(search.length > 0){
-        options.where = { name: Like(`%${search}%`) };
+        options.where = {...options.where, name: Like(`%${search}%`) };
       }
 
       const [data, total] = await Product.findAndCount(options);
