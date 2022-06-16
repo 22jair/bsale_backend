@@ -1,4 +1,4 @@
-## BSALE - API
+## SALE - API
 Rest Api basada en las siguientes tecnologías
 - Node
 - Express
